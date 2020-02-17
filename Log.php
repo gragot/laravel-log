@@ -4,7 +4,7 @@
  * Class Log
  */
 
-namespace App\Lib;
+namespace Gragot\Log;
 
 use Auth;
 
