@@ -1,0 +1,14 @@
+{
+    "name": "gragot/log",
+    "description": "Librería para la generación de logs",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Piro",
+            "email": "gragot.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
