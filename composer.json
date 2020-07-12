@@ -1,11 +1,11 @@
 {
-    "name": "gragot/log",
-    "description": "Librería para la generación de logs",
+    "name": "gragot/laravel-log",
+    "description": "Librería para la generación de logs en laravel",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Piro",
+            "name": "gragot",
             "email": "gragot.dev@gmail.com"
         }
     ],
@@ -13,7 +13,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Gragot\\Log\\": ""
+            "Gragot\\laravel\\Log\\": ""
         }
     }
 }

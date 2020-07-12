@@ -4,7 +4,7 @@
  * Class Log
  */
 
-namespace Gragot\Log;
+namespace Gragot\Laravel\Log;
 
 use Auth;
 
