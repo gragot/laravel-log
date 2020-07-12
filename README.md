@@ -18,4 +18,9 @@ Añadir en require y repositories del archivo composer.json el siguiente codigo:
 ],
 ```
 
+Ejecutar composer update para descargar el repositorio:
+
+```
+composer update gragot/laravel-log
+```
 
