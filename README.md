@@ -1,13 +1,8 @@
 # Instalación
 
-Añadir en require y repositories del archivo composer.json el siguiente codigo:
+Añadir repositories del archivo composer.json el siguiente codigo:
 
 ```
-"require": {
-    ...
-    "gragot/laravel/log": "dev-master",
-    ...
-},
 "repositories":[
     ...    
     {
@@ -18,9 +13,9 @@ Añadir en require y repositories del archivo composer.json el siguiente codigo:
 ],
 ```
 
-Ejecutar composer update para descargar el repositorio:
+Ejecutar composer require para descargar el repositorio:
 
 ```
-composer update gragot/laravel-log
+composer require gragot/laravel-log
 ```
 
