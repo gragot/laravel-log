@@ -15,15 +15,15 @@ class Log
     const ERROR = 'ERROR'; // Errores en la aplicacion
     const WARN = 'WARN'; // Exepciones que no son consideradas errores
     const SQL = 'SQL'; // Sentencias SQL
-    const CURL = 'CURL'; // Sentencias SQL
+    const CURL = 'CURL'; // Peticiones CURL
 
     private static $identificadorPeticion = null;
     public static $activate = true;
 
     private static function config() {
         return [
-            'log_path' => storage_path().DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR,
-            'milliseconds' => false
+            'log_path' => config('gragot_log.log_path', storage_path().DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR),
+            'user_field' => config('gragot_log.user_field', 'login'),
         ];
     }
 
@@ -147,7 +147,7 @@ class Log
         if(!is_null(self::$identificadorPeticion)) {
             return self::$identificadorPeticion;
         }
-        self::$identificadorPeticion = bin2hex(random_bytes(3));
+        self::$identificadorPeticion = bin2hex(random_bytes(2));
         return self::$identificadorPeticion;
     }
 
@@ -167,10 +167,16 @@ class Log
         $fechaActual = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
 
         $identificadorPeticion = self::getIdentificadorPeticion();
-        $usuario = Auth::hasUser() ? Auth::user()->login.'#' : 'no-user#';
+        $campo_usuario = self::config()['user_field'];
+        if(Auth::hasUser()) {
+            $usuario = Auth::user();
+            $usuario = $usuario->$campo_usuario."($usuario->id)#";
+        } else {
+            $usuario = 'no-user#';
+        }
+
         $textoTipoLog = self::getTextoFromTipoLog($tipoLog);
 
-        // $cabezeraLog = $fechaActual->format("Y-m-d H:i:s.v")." $identificadorPeticion $textoTipoLog: $usuario";
         $cabezeraLog = $fechaActual->format("Y-m-d H:i:s")." $identificadorPeticion $textoTipoLog: $usuario";
 
         if(is_object($mensaje) && (is_a($mensaje, 'Exception') || is_a($mensaje, 'Error'))) {
