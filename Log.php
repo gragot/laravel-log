@@ -43,8 +43,8 @@ class Log
         self::write($mensaje, self::CURL);
     }
 
-    static function info($mensaje) {
-        self::write($mensaje, self::INFO);
+    static function info($mensaje, $saltosDeLinea = 'false') {
+        self::write($mensaje, self::INFO, $saltosDeLinea);
     }
 
     static function sql($mensaje) {
@@ -167,7 +167,7 @@ class Log
      * @param $tipoLog
      * @throws \Exception
      */
-    static function write($mensaje, $tipoLog)
+    static function write($mensaje, $tipoLog, $saltosDeLinea = false)
     {
         if(!self::$activate) {
             return;
@@ -200,8 +200,10 @@ class Log
         if(is_array($mensaje) || is_object($mensaje)) {
             $mensaje = $cabezeraLog.print_r($mensaje, true);
         } else {
-            // Sustituimos los saltos de linea por espacios y la concatenacion de varios espacios por un solo espacio
-            $mensaje = preg_replace('/\s+/', ' ', $mensaje);
+            if(!$saltosDeLinea) {
+                // Sustituimos los saltos de linea por espacios y la concatenacion de varios espacios por un solo espacio
+                $mensaje = preg_replace('/\s+/', ' ', $mensaje);
+            }
             $mensaje = $cabezeraLog.$mensaje;
         }
 
