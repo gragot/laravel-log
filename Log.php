@@ -67,17 +67,17 @@ class Log
         self::checkPath($year, $month);
         switch ($tipoLog) {
             case self::INFO:
-                return $ruta."$fechaActualString INFO.log";
+                return $ruta."$fechaActualString info.log";
             case self::ERROR:
-                return $ruta."$fechaActualString ERROR.log";
+                return $ruta."$fechaActualString error.log";
             case self::SQL:
-                return $ruta."$fechaActualString SQL.log";
+                return $ruta."$fechaActualString sql.log";
             case self::CURL:
-                return $ruta."$fechaActualString CURL.log";
+                return $ruta."$fechaActualString curl.log";
             case self::WARN:
-                return $ruta."$fechaActualString WARN.log";
+                return $ruta."$fechaActualString warn.log";
             default:
-                return $ruta."$fechaActualString All.log";
+                return $ruta."$fechaActualString all.log";
         }
     }
 
