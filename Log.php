@@ -56,7 +56,7 @@ class Log
      * @return string
      * @throws Exception
      */
-    static function getPathLogFile($tipoLog)
+    static function getPathLogFile($tipoLog, $nombreProceso = null)
     {
         $fechaActual = new \DateTime();
         $fechaActualString = $fechaActual->format("Y-m-d");
@@ -67,17 +67,24 @@ class Log
         self::checkPath($year, $month);
         switch ($tipoLog) {
             case self::INFO:
-                return $ruta."$fechaActualString info.log";
+                return $ruta . $fechaActualString . '_info.log';
             case self::ERROR:
-                return $ruta."$fechaActualString error.log";
+                return $ruta. $fechaActualString . '_error.log';
             case self::SQL:
-                return $ruta."$fechaActualString sql.log";
+                return $ruta. $fechaActualString . '_sql.log';
             case self::CURL:
-                return $ruta."$fechaActualString curl.log";
+                return $ruta. $fechaActualString . '_curl.log';
             case self::WARN:
-                return $ruta."$fechaActualString warn.log";
+                return $ruta. $fechaActualString . '_warn.log';
+            case 'TMP':
+                self::checkPath($year, $month, 'procesos');
+                if($nombreProceso) {
+                    return $ruta . 'procesos' . DIRECTORY_SEPARATOR . $fechaActualString . '_' . $nombreProceso . '.log';
+                } else {
+                    return $ruta . 'procesos' . DIRECTORY_SEPARATOR . $fechaActualString . '_' . $GLOBALS['log_temporal'] . '.log';
+                }
             default:
-                return $ruta."$fechaActualString all.log";
+                return $ruta. $fechaActualString . '_all.log';
         }
     }
 
@@ -126,7 +133,7 @@ class Log
      * @param $month
      * @throws Exception
      */
-    static function checkPath($year, $month)
+    static function checkPath($year, $month, $subdirectorio = null)
     {
         $dirYear = self::config()['log_path'].$year;
         if(!is_dir($dirYear)) {
@@ -138,6 +145,12 @@ class Log
         if(!is_dir($dirMonth)) {
             if(!mkdir($dirMonth)) {
                 throw new Exception("Error al crear el directorio de logs: ".$dirMonth);
+            }
+        }
+        $dirSubdirectorio = $dirYear.DIRECTORY_SEPARATOR.$month.DIRECTORY_SEPARATOR.$subdirectorio;
+        if(!is_dir($dirSubdirectorio)) {
+            if(!mkdir($dirSubdirectorio)) {
+                throw new Exception("Error al crear el directorio de logs: ".$dirSubdirectorio);
             }
         }
     }
@@ -160,6 +173,12 @@ class Log
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    static function initLog($logTemporal) {
+        $fecha = new \DateTime();
+        $GLOBALS['log_temporal'] = $fecha->format('His') . '_' . $logTemporal;
+        return $GLOBALS['log_temporal'];
     }
 
     /**
@@ -211,5 +230,9 @@ class Log
         $rutaArchivo = self::getPathLogFile($tipoLog);
         file_put_contents($rutaArchivoLogAll, $mensaje."\n", FILE_APPEND);
         file_put_contents($rutaArchivo, $mensaje."\n", FILE_APPEND);
+
+        if(!empty($GLOBALS['log_temporal'])) {
+            file_put_contents(self::getPathLogFile('TMP'), $mensaje."\n", FILE_APPEND);
+        }
     }
 }
